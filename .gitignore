@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+config.json
+.env
+.env.*
+*.db
+*.sqlite
+*.sqlite3
+data/
+attachments/
+exports/
+output/
+*.pst
+*.ost
+.vscode/
+.idea/
