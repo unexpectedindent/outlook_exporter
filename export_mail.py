@@ -1,5 +1,6 @@
 """Read-only export of MailItem objects to SQLite and the attachment directory."""
 import argparse
+from datetime import datetime
 import logging
 from common import (OL_MAIL, OL_MEETING_REQUEST, choose_stores, connect_db,
     connect_outlook, dt, error, iter_folders, load_config, mapi, now,
@@ -9,6 +10,11 @@ from common import (OL_MAIL, OL_MEETING_REQUEST, choose_stores, connect_db,
 LOG = logging.getLogger('outlook_exporter')
 
 def run(cfg):
+    received_after = (
+        datetime.fromisoformat(cfg["received_after"])
+        if cfg.get("received_after")
+        else None
+    )
     ns = connect_outlook()
     db = connect_db()
     completed = 0
@@ -35,6 +41,10 @@ def run(cfg):
                         if objclass == OL_MEETING_REQUEST and cfg.get('include_meeting_requests_in_mail'):
                             LOG.info('Meeting request skipped as MailItem: %s', safe(item, 'Subject'))
                         continue
+                    if received_after is not None:
+                        received = safe(item, "ReceivedTime")
+                        if received is None or received.replace(tzinfo=None) <= received_after:
+                            continue
                     entry_id = safe(item, 'EntryID')
                     if not entry_id:
                         continue

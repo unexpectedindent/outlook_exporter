@@ -8,6 +8,11 @@ from common import (OL_APPOINTMENT, choose_stores, connect_db, connect_outlook,
 LOG = logging.getLogger('outlook_exporter')
 
 def run(cfg):
+    received_after = (
+        datetime.fromisoformat(cfg["received_after"])
+        if cfg.get("received_after")
+        else None
+    )
     ns, db = connect_outlook(), connect_db()
     completed = 0
     for store in choose_stores(ns, cfg):
@@ -29,6 +34,10 @@ def run(cfg):
                     item = items.Item(index)
                     if safe(item, 'Class') != OL_APPOINTMENT:
                         continue
+                    if received_after is not None:
+                        received = safe(item, "Start")
+                        if received is None or received.replace(tzinfo=None) <= received_after:
+                            continue
                     entry_id = safe(item, 'EntryID')
                     if not entry_id:
                         continue

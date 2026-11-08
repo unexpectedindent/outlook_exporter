@@ -1,7 +1,7 @@
 {
   "primary_account_smtp": "user@company.local",
   "include_primary_store": true,
-  "additional_archive_store_names": [],
+  "additional_archive_store_names": ["Архивы"],
   "additional_archive_store_paths": [],
   "exclude_default_folders": ["drafts", "junk", "deleted", "outbox", "sync_issues"],
   "exclude_folder_names": ["Черновики", "Нежелательная почта", "Удаленные", "Удалённые", "Junk E-mail", "Deleted Items", "Drafts"],
@@ -11,6 +11,7 @@
   "save_inline_attachments": true,
   "max_items_per_folder": 0,
   "commit_every": 100,
+  "received_after": "2026-11-01 00:00:00",
   "diff": {
     "similarity_threshold": 0.72,
     "min_quoted_lines": 3,
